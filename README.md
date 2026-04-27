@@ -29,9 +29,9 @@ python demo.py
 
 ## Hardware components
 
-__Motors__: Dynamixel XL430-W250-T (https://emanual.robotis.com/docs/en/dxl/x/xl430-w250/)
-__Board__: OpenRB-150 (https://emanual.robotis.com/docs/en/parts/controller/openrb-150/)
-__Controller__: GameSir Nova Lite (https://gamesir.com/products/gamesir-nova-lite)
+- __Motors__: Dynamixel XL430-W250-T (https://emanual.robotis.com/docs/en/dxl/x/xl430-w250/)
+- __Board__: OpenRB-150 (https://emanual.robotis.com/docs/en/parts/controller/openrb-150/)
+- __Controller__: GameSir Nova Lite (https://gamesir.com/products/gamesir-nova-lite)
 
 
 ## Motors configuration
