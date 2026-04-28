@@ -274,9 +274,15 @@ class Status:
     data: bytes
 
     @classmethod
-    def from_bytes(cls, data: bytes) -> "Status":
-        assert len(data) >= 11, f"{list(data)=}"
-        assert data[0:4] == bytes([0xFF, 0xFF, 0xFD, 0x00]), f"{list(data)=}"
+    def read(cls, openrb150: serial.Serial, length: int) -> "Status":
+        assert length >= 11
+        data = openrb150.read(4)
+        if data[0:4] == bytes([0xFF, 0xFF, 0xFD, 0x00]):
+            data += openrb150.read(length - 4)
+        elif data[1:4] == bytes([0xFF, 0xFF, 0xFD]):
+            data = data[1:4] + openrb150.read(length - 3)
+        else:
+            raise Exception(f"unexpected response {list(data)}")
         length = data[5] | (data[6] << 8)
         assert len(data) == length + 7, f"{list(data)=}"
         crc = Motor.crc(data[0:-2])
@@ -348,7 +354,7 @@ class Motor:
             self.compose_write_message(address=65, data=bytes([1 if enable else 0]))
         )
         openrb150.flush()
-        status = Status.from_bytes(openrb150.read(11))
+        status = Status.read(openrb150=openrb150, length=11)
         if check_status:
             status.check(expected_motor_id=self.motor_id)
 
@@ -362,7 +368,7 @@ class Motor:
             self.compose_write_message(address=64, data=bytes([1 if enable else 0]))
         )
         openrb150.flush()
-        status = Status.from_bytes(openrb150.read(11))
+        status = Status.read(openrb150=openrb150, length=11)
         if check_status:
             status.check(expected_motor_id=self.motor_id)
 
@@ -389,7 +395,7 @@ class Motor:
             )
         )
         openrb150.flush()
-        status = Status.from_bytes(openrb150.read(11))
+        status = Status.read(openrb150=openrb150, length=11)
         if check_status:
             status.check(expected_motor_id=self.motor_id)
 
@@ -407,7 +413,7 @@ class Motor:
             )
         )
         openrb150.flush()
-        status = Status.from_bytes(openrb150.read(11))
+        status = Status.read(openrb150=openrb150, length=11)
         if check_status:
             status.check(expected_motor_id=self.motor_id)
         if threshold is not None:
@@ -422,7 +428,7 @@ class Motor:
             )
         )
         openrb150.flush()
-        status = Status.from_bytes(openrb150.read(15))
+        status = Status.read(openrb150=openrb150, length=15)
         return struct.unpack("<I", status.data)[0]
 
     def set_velocity(
@@ -438,7 +444,7 @@ class Motor:
             )
         )
         openrb150.flush()
-        status = Status.from_bytes(openrb150.read(11))
+        status = Status.read(openrb150=openrb150, length=11)
         if check_status:
             status.check(expected_motor_id=self.motor_id)
 

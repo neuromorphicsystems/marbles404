@@ -26,7 +26,7 @@ app = ui.App(
             height: window.height
             sensor_size: "{device.properties().width}x{device.properties().height}"
             style: "exponential"
-            tau: 100000
+            tau: 60000
         }}
     }}
     """
@@ -68,11 +68,11 @@ controller = controller_module.Controller(
 
 def labyrinth_target():
     labyrinth = labyrinth_module.Labyrinth(
-        port="/dev/tty.usbmodem101",
-        left_limit=2048 - 800,
-        right_limit=2048 + 800,
-        front_limit=2048 + 500 - 800,
-        back_limit=2048 + 500 + 800,
+        port="/dev/tty.usbmodem1101",
+        left_limit=2243 - 900,
+        right_limit=2243 + 900,
+        front_limit=2058 - 700,
+        back_limit=2058 + 700,
     )
     while True:
         with target.lock:
