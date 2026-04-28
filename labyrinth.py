@@ -283,6 +283,7 @@ class Status:
             data = data[1:4] + openrb150.read(length - 3)
         else:
             raise Exception(f"unexpected response {list(data)}")
+        assert data[0:4] == bytes([0xFF, 0xFF, 0xFD, 0x00]), f"{list(data)=}"
         length = data[5] | (data[6] << 8)
         assert len(data) == length + 7, f"{list(data)=}"
         crc = Motor.crc(data[0:-2])
