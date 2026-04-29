@@ -1,4 +1,5 @@
 hid==1.0.9
+faery==0.7.0
 neuromorphic-drivers==0.17.0
 pyserial==3.5
 PySide6==6.11.0
