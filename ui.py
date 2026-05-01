@@ -1660,6 +1660,20 @@ class EventDisplay(PySide6.QtQuick.QQuickItem):
         doc="whether to clear the display's background with padding color",
     )
 
+    draw_area_changed = PySide6.QtCore.Signal(PySide6.QtCore.QRectF)
+
+    def get_draw_area(self) -> PySide6.QtCore.QRectF:
+        if self._draw_area is None:
+            return PySide6.QtCore.QRectF()
+        return self._draw_area
+
+    draw_area = PySide6.QtCore.Property(
+        PySide6.QtCore.QRectF,
+        fget=get_draw_area,
+        notify=draw_area_changed,
+        doc="the sensor draw area",
+    )
+
     @PySide6.QtCore.Slot()
     def trigger_draw(self):
         if self._window is not None:
@@ -1766,7 +1780,7 @@ class EventDisplay(PySide6.QtQuick.QQuickItem):
             self._renderer.set_clear_and_draw_areas(
                 clear_area=self._clear_area, draw_area=self._draw_area
             )
-            # @TODO emit signal for paint area change
+            self.draw_area_changed.emit(self._draw_area)
 
 
 class FrameDisplayRenderer(PySide6.QtGui.QOpenGLFunctions):
