@@ -101,10 +101,10 @@ controller = controller_module.Controller(
 def labyrinth_target():
     labyrinth = labyrinth_module.Labyrinth(
         port="/dev/tty.usbmodem1101",
-        left_limit=1810 - 900,
-        right_limit=1810 + 900,
-        front_limit=2234 - 700,
-        back_limit=2234 + 700,
+        left_limit=2224 - 900,
+        right_limit=2224 + 900,
+        front_limit=2404 - 700,
+        back_limit=2404 + 700,
     )
     while True:
         with target.lock:
