@@ -16,16 +16,45 @@ import ui
 recordings = pathlib.Path(__file__).resolve().parent / "recordings"
 recordings.mkdir(exist_ok=True)
 
-nd.print_device_list()
-device = nd.open(
-    configuration=nd.prophesee_evk4.Configuration(
-        biases=nd.prophesee_evk4.Biases(
-            diff_on=120,  # default 102
-            diff_off=80,  # default 73
+DEFAULT_SENSOR_WIDTH = 1280
+DEFAULT_SENSOR_HEIGHT = 720
+
+
+def print_device_list():
+    try:
+        nd.print_device_list()
+    except Exception as exc:
+        print(f"could not list neuromorphic devices: {exc}")
+
+
+def open_camera_device() -> typing.Optional[nd.GenericDeviceOptional]:
+    try:
+        return nd.open(
+            configuration=nd.prophesee_evk4.Configuration(
+                biases=nd.prophesee_evk4.Biases(
+                    diff_on=120,  # default 102
+                    diff_off=80,  # default 73
+                )
+            ),
+            iterator_timeout=1.0 / 60.0,
         )
-    ),
-    iterator_timeout=1.0 / 60.0,
-)
+    except Exception as exc:
+        print(f"running without Prophesee camera: {exc}")
+        return None
+
+
+def sensor_dimensions(
+    device: typing.Optional[nd.GenericDeviceOptional],
+) -> tuple[int, int]:
+    if device is None:
+        return DEFAULT_SENSOR_WIDTH, DEFAULT_SENSOR_HEIGHT
+    properties = device.properties()
+    return properties.width, properties.height
+
+
+print_device_list()
+device = open_camera_device()
+sensor_width, sensor_height = sensor_dimensions(device)
 app = ui.App(
     f"""
     import QtQuick
@@ -33,13 +62,13 @@ app = ui.App(
 
     Window {{
         id: window
-        width: {device.properties().width}
-        height: {device.properties().height}
+        width: {sensor_width}
+        height: {sensor_height}
 
         EventDisplay {{
             width: window.width
             height: window.height
-            sensor_size: "{device.properties().width}x{device.properties().height}"
+            sensor_size: "{sensor_width}x{sensor_height}"
             style: "exponential"
             tau: 60000
         }}
@@ -60,8 +89,8 @@ class Target:
 
     def update_from_report(self, report: controller_module.Report):
         with self.lock:
-            self.front_back = report.left_stick_y / 4095
             self.left_right = report.left_stick_x / 4095
+            self.front_back = report.right_stick_y / 4095
             if report.button_rb:
                 self.reload = True
             if report.button_lb:
@@ -98,14 +127,33 @@ controller = controller_module.Controller(
 )
 
 
+LABYRINTH_PORT = "/dev/tty.usbmodem1101"
+
+
+def open_labyrinth() -> typing.Optional[labyrinth_module.Labyrinth]:
+    try:
+        return labyrinth_module.Labyrinth(
+            port=LABYRINTH_PORT,
+            left_limit=2224 - 900,
+            right_limit=2224 + 900,
+            front_limit=2404 - 700,
+            back_limit=2404 + 700,
+        )
+    except Exception as exc:
+        print(f"running without labyrinth board: {exc}")
+        return None
+
+
 def labyrinth_target():
-    labyrinth = labyrinth_module.Labyrinth(
-        port="/dev/tty.usbmodem1101",
-        left_limit=2224 - 900,
-        right_limit=2224 + 900,
-        front_limit=2404 - 700,
-        back_limit=2404 + 700,
-    )
+    labyrinth = open_labyrinth()
+    if labyrinth is None:
+        while True:
+            with target.lock:
+                if target.stop:
+                    break
+            time.sleep(0.1)
+        return
+
     while True:
         with target.lock:
             left_right = target.left_right
@@ -127,9 +175,18 @@ labyrinth_thread = threading.Thread(target=labyrinth_target, daemon=True)
 
 
 def camera_thread_target(
-    device: nd.GenericDeviceOptional,
+    device: typing.Optional[nd.GenericDeviceOptional],
     event_display: ui.EventDisplay,
 ):
+    if device is None:
+        while True:
+            with target.lock:
+                if target.stop:
+                    break
+            event_display.push(events=np.array([]), current_t=time.monotonic_ns())
+            time.sleep(1.0 / 60.0)
+        return
+
     recording: typing.Optional[tuple[str, faery.evt.Encoder]] = None
     for status, packet in device:
         with target.lock:
@@ -182,13 +239,18 @@ def camera_thread_target(
 
 
 event_display = app.event_display()
-camera_thread = threading.Thread(
-    target=camera_thread_target,
-    args=(device, event_display),
-)
+camera_thread = None
+if device is not None:
+    camera_thread = threading.Thread(
+        target=camera_thread_target,
+        args=(device, event_display),
+    )
+    camera_thread.start()
+else:
+    print("No Prophesee camera detected; running demo without event input.")
 
 labyrinth_thread.start()
-camera_thread.start()
 app.run()
 labyrinth_thread.join()
-camera_thread.join()
+if camera_thread is not None:
+    camera_thread.join()
