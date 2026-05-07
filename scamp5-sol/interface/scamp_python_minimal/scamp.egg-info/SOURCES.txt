@@ -1,0 +1,7 @@
+setup.py
+../scamp_python_module/scampmodule.cpp
+../scamp_python_module/scampmodule_packet_switch.cpp
+scamp.egg-info/PKG-INFO
+scamp.egg-info/SOURCES.txt
+scamp.egg-info/dependency_links.txt
+scamp.egg-info/top_level.txt
