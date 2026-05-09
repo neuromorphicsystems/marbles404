@@ -1,0 +1,15 @@
+D:/MCUXpressoIDE/ide/plugins/com.nxp.mcuxpresso.tools.win32_25.6.0.202501151204/tools/arm-none-eabi/include/c++/14.2.1/bits/std_function.h:288:7:) [with _Res = void; _Functor = main()::<lambda(int32_t)>; _ArgTypes = {long int}]	0	static
+D:\SCAMP\scamp5d_lib\s5d_m0\inc/scamp5_kernel_api.hpp:102:5:scamp5_kernel::~scamp5_kernel()	24	static
+D:/MCUXpressoIDE/ide/plugins/com.nxp.mcuxpresso.tools.win32_25.6.0.202501151204/tools/arm-none-eabi/include/c++/14.2.1/bits/std_function.h:288:7:) [with _Res = void; _Functor = main()::<lambda()>; _ArgTypes = {}]	8	static
+D:/MCUXpressoIDE/ide/plugins/com.nxp.mcuxpresso.tools.win32_25.6.0.202501151204/tools/arm-none-eabi/include/c++/14.2.1/bits/std_function.h:267:7:), _Functor>::_M_manager(std::_Any_data&, const std::_Any_data&, std::_Manager_operation) [with _Res = void; _Functor = main()::<lambda()>; _ArgTypes = {}]	0	static
+D:/MCUXpressoIDE/ide/plugins/com.nxp.mcuxpresso.tools.win32_25.6.0.202501151204/tools/arm-none-eabi/include/c++/14.2.1/bits/std_function.h:267:7:), _Functor>::_M_manager(std::_Any_data&, const std::_Any_data&, std::_Manager_operation) [with _Res = void; _Functor = main()::<lambda(int32_t)>; _ArgTypes = {long int}]	0	static
+D:\SCAMP\scamp5d_lib\s5d_m0\inc/scamp5_kernel_api.hpp:602:13:void scamp5_kernel_api::CLR(const dreg_t&)	12	static
+D:\SCAMP\scamp5d_lib\s5d_m0\inc/scamp5_kernel_api_macro_digital.hpp:220:13:void scamp5_kernel_api::AND(const dreg_t&, const dref_t&, const dref_t&)	56	static
+D:/MCUXpressoIDE/ide/plugins/com.nxp.mcuxpresso.tools.win32_25.6.0.202501151204/tools/arm-none-eabi/include/c++/14.2.1/bits/std_function.h:241:5:std::_Function_base::~_Function_base()	8	static
+../src/MISC_FUNCS.hpp:11:7:void output_4bit_F_via_DNEWS(areg_t, vs_handle, bool, int, int, int, int)	64	static
+../src/MISC_FUNCS.hpp:115:7:void output_4bit_image_via_DNEWS(areg_t, vs_handle, bool, int, int, int, int)	88	static
+../src/MISC_FUNCS.hpp:123:7:void DREG_load_centered_rect(dreg_t, int, int, int, int)	40	static
+../src/scamp5_main.cpp:37:6:void dilate_reg_S2(int)	64	static
+../src/scamp5_main.cpp:53:6:void erode_dreg_S2(int)	64	static
+../src/scamp5_main.cpp:71:6:void closure_for_S2(int)	8	static
+../src/scamp5_main.cpp:82:5:int main()	336	static

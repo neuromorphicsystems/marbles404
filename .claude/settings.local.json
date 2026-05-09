@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(D:/miniconda/python.exe -m py_compile /d/projs/marbles404/stabilize.py)",
+      "Bash(D:/miniconda/python.exe -m py_compile /d/projs/marbles404/stabilize_sequence.py)"
+    ]
+  }
+}

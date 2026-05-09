@@ -1,0 +1,5 @@
+D:/MCUXpressoIDE/ide/plugins/com.nxp.mcuxpresso.tools.win32_25.6.0.202501151204/tools/arm-none-eabi/include/c++/14.2.1/bits/std_function.h:267:7:), _Functor>::_M_manager(std::_Any_data&, const std::_Any_data&, std::_Manager_operation) [with _Res = void; _Functor = main()::<lambda()>; _ArgTypes = {}]	0	static
+D:/MCUXpressoIDE/ide/plugins/com.nxp.mcuxpresso.tools.win32_25.6.0.202501151204/tools/arm-none-eabi/include/c++/14.2.1/bits/invoke.h:145:5:) [with _Res = void; _Callable = main()::<lambda()>&; _Args = {}]	8	static
+D:/MCUXpressoIDE/ide/plugins/com.nxp.mcuxpresso.tools.win32_25.6.0.202501151204/tools/arm-none-eabi/include/c++/14.2.1/bits/std_function.h:288:7:) [with _Res = void; _Functor = main()::<lambda()>; _ArgTypes = {}]	8	static
+D:/MCUXpressoIDE/ide/plugins/com.nxp.mcuxpresso.tools.win32_25.6.0.202501151204/tools/arm-none-eabi/include/c++/14.2.1/bits/std_function.h:241:5:std::_Function_base::~_Function_base()	8	static
+../src/scamp5_main.cpp:17:5:int main()	40	static
