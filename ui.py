@@ -106,9 +106,7 @@ for mode in ("L", "RGB", "RGBA", "P"):
         else:
             extra_sampler = ""
             color = f"vec4({r_value}, {g_value}, {b_value}, {a_value})"
-        frame_display_mode_and_dtype_to_fragment_shader[
-            (mode, dtype)
-        ] = f"""
+        frame_display_mode_and_dtype_to_fragment_shader[(mode, dtype)] = f"""
 #version 330 core
 
 in vec2 coordinates;
@@ -2109,6 +2107,11 @@ class FrameDisplay(PySide6.QtQuick.QQuickItem):
         doc="sensor size in pixels",
     )
 
+    def get_mode(self) -> FrameMode:
+        if self._mode is None:
+            return "L"
+        return self._mode
+
     def set_mode(self, mode: FrameMode):
         assert mode in {"L", "RGB", "RGBA", "P"}
         if self._mode is not None:
@@ -2117,9 +2120,15 @@ class FrameDisplay(PySide6.QtQuick.QQuickItem):
 
     mode = PySide6.QtCore.Property(
         str,
+        fget=get_mode,
         fset=set_mode,
         doc="input frame depth",
     )
+
+    def get_dtype(self) -> FrameDtype:
+        if self._dtype is None:
+            return "u1"
+        return self._dtype
 
     def set_dtype(self, dtype: FrameDtype):
         assert dtype in {"u1", "u2", "f4"}
@@ -2129,6 +2138,7 @@ class FrameDisplay(PySide6.QtQuick.QQuickItem):
 
     dtype = PySide6.QtCore.Property(
         str,
+        fget=get_dtype,
         fset=set_dtype,
         doc="input frame pixel type",
     )
