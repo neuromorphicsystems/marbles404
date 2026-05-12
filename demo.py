@@ -27,7 +27,9 @@ def print_device_list():
         print(f"could not list neuromorphic devices: {exc}")
 
 
-def open_camera_device() -> typing.Optional[nd.GenericDeviceOptional]:
+def open_camera_device() -> (
+    typing.Optional[nd.prophesee_evk4.PropheseeEvk4DeviceOptional]
+):
     try:
         return nd.open(
             configuration=nd.prophesee_evk4.Configuration(
@@ -49,14 +51,13 @@ def sensor_dimensions(
     if device is None:
         return DEFAULT_SENSOR_WIDTH, DEFAULT_SENSOR_HEIGHT
     properties = device.properties()
-    return properties.width, properties.height
+    return int(properties.width), int(properties.height)
 
 
 print_device_list()
 device = open_camera_device()
 sensor_width, sensor_height = sensor_dimensions(device)
-app = ui.App(
-    f"""
+app = ui.App(f"""
     import QtQuick
     import NeuromorphicDrivers
 
@@ -73,8 +74,7 @@ app = ui.App(
             tau: 60000
         }}
     }}
-    """
-)
+    """)
 
 
 @dataclasses.dataclass
@@ -134,13 +134,13 @@ def open_labyrinth() -> typing.Optional[labyrinth_module.Labyrinth]:
     try:
         return labyrinth_module.Labyrinth(
             port=LABYRINTH_PORT,
-            left_limit=2224 - 900,
-            right_limit=2224 + 900,
-            front_limit=2404 - 700,
-            back_limit=2404 + 700,
+            left_limit=2069 - 500,
+            right_limit=2069 + 500,
+            front_limit=1912 - 600,
+            back_limit=1912 + 600,
         )
-    except Exception as exc:
-        print(f"running without labyrinth board: {exc}")
+    except Exception as exception:
+        print(f"running without labyrinth board: {exception}")
         return None
 
 
@@ -153,7 +153,6 @@ def labyrinth_target():
                     break
             time.sleep(0.1)
         return
-
     while True:
         with target.lock:
             left_right = target.left_right
